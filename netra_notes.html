@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netra Notes</title>
+    <style>
+        body {
+            font-family: "Courier New", monospace;
+            background-color: #222;
+            color: #0f0;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            border: 2px solid #0f0;
+            padding: 20px;
+            background: #000;
+        }
+        input, button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            background: #111;
+            color: #0f0;
+            border: 1px solid #0f0;
+        }
+        a {
+            color: #0f0;
+            text-decoration: none;
+            display: block;
+            margin: 10px 0;
+        }
+        @media (max-width: 600px) {
+            body {
+                font-size: 14px;
+            }
+            .container {
+                width: 90%;
+            }
+            input, button {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="registerContainer">
+        <h1>Netra Notes - Register</h1>
+        <input type="text" id="regUsername" placeholder="Choose a Username">
+        <input type="password" id="regPassword" placeholder="Choose a Password">
+        <button onclick="register()">Register</button>
+    </div>
+
+    <div class="container" id="loginContainer" style="display: none;">
+        <h1>Netra Notes - Login</h1>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div class="container" id="profileContainer" style="display: none;">
+        <h1>Profile</h1>
+        <p>Username: <span id="profileUsername"></span></p>
+        <button onclick="logout()">Logout</button>
+    </div>
+
+    <div class="container" id="mainContainer" style="display: none;">
+        <h1>Netra Notes</h1>
+        <p>Upload and access notes & PDFs</p>
+        <input type="file" id="fileInput">
+        <button onclick="uploadFile()">Upload</button>
+        <h3>Available Notes:</h3>
+        <div id="fileList"></div>
+    </div>
+
+    <script>
+        let users = {};
+        let currentUser = null;
+
+        function register() {
+            const regUsername = document.getElementById("regUsername").value;
+            const regPassword = document.getElementById("regPassword").value;
+            if (regUsername && regPassword) {
+                users[regUsername] = regPassword;
+                alert("Registration successful! Please log in.");
+                document.getElementById("registerContainer").style.display = "none";
+                document.getElementById("loginContainer").style.display = "block";
+            } else {
+                alert("Please fill out all fields.");
+            }
+        }
+
+        function login() {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            if (users[username] && users[username] === password) {
+                currentUser = username;
+                document.getElementById("profileUsername").innerText = username;
+                document.getElementById("loginContainer").style.display = "none";
+                document.getElementById("profileContainer").style.display = "block";
+                document.getElementById("mainContainer").style.display = "block";
+            } else {
+                alert("Invalid credentials! Try again.");
+            }
+        }
+
+        function logout() {
+            currentUser = null;
+            document.getElementById("profileContainer").style.display = "none";
+            document.getElementById("mainContainer").style.display = "none";
+            document.getElementById("loginContainer").style.display = "block";
+        }
+
+        function uploadFile() {
+            const fileInput = document.getElementById("fileInput");
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const fileList = document.getElementById("fileList");
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(file);
+                link.download = file.name;
+                link.textContent = file.name;
+                fileList.appendChild(link);
+            } else {
+                alert("Please select a file to upload.");
+            }
+        }
+    </script>
+</body>
+</html>
